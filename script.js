@@ -9,19 +9,6 @@ provider.add(
 provider.add(
     new LocalJsonProvider()
 );
-/* ProductProvider can be extended to use a future public IMVU API without UI changes. */
-class ProductProvider {
-  async getProducts() {
-    try {
-      const response = await fetch('products.json');
-      if (!response.ok) throw new Error('Product file unavailable');
-      return await response.json();
-    } catch (error) {
-      console.warn('Using empty product collection:', error);
-      return [];
-    }
-  }
-}
 
 const config = window.KING_CONFIG;
 const $ = (selector) => document.querySelector(selector);
@@ -40,7 +27,12 @@ function productCard(product, index) {
 async function start() {
   setExternalLinks();
   $('#year').textContent = new Date().getFullYear();
-  const products = await new ProductProvider().getProducts();
+  
+  // ---------------------------------------------------------
+  // التعديل هنا: قمنا بتبديل جلب المنتجات القديم بالكود الجديد الخاص بك
+  const products = await provider.loadProducts();
+  // ---------------------------------------------------------
+
   const carousel = $('#carousel');
   const render = (items) => {
     carousel.innerHTML = items.length ? items.map(productCard).join('') : '<p class="empty">The collection is being prepared. Visit the IMVU shop to explore it.</p>';
