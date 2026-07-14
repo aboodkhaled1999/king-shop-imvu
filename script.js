@@ -1,3 +1,14 @@
+const provider = new ProviderManager();
+
+provider.add(
+    new ImvuApiProvider(
+        CONFIG.productsUrl
+    )
+);
+
+provider.add(
+    new LocalJsonProvider()
+);
 /* ProductProvider can be extended to use a future public IMVU API without UI changes. */
 class ProductProvider {
   async getProducts() {
