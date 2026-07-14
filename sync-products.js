@@ -2,8 +2,8 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 
-// https://www.imvu.com/shop/web_search.php?manufacturers_id=315504714.env
-const IMVU_SHOP_URL = process.env.IMVU_SHOP_URL || "https://www.imvu.com/shop/web_search.php?manufactor_id=YOUR_CREATOR_ID"; 
+// https://www.imvu.com/shop/web_search.php?manufacturers_id=315504714
+const IMVU_SHOP_URL = process.env.IMVU_SHOP_URL || "https://www.imvu.com/shop/web_search.php?manufacturers_id=YOUR_CREATOR_ID"; 
 
 async function syncProducts() {
   console.log("🚀 جاري بدء عملية جلب المنتجات من IMVU...");
@@ -53,8 +53,12 @@ async function syncProducts() {
         const imgElement = item.querySelector('img');
         const image = imgElement ? imgElement.src : '';
 
-        // تصنيف افتراضي (يمكن تعديله لاحقاً)
-        const category = "IMVU Item";
+        // محاولة استخراج الفئة من البيانات أو الخصائص
+        let category = "IMVU Item";
+        const categoryElement = item.querySelector('.category, .product-category, [class*="category"]');
+        if (categoryElement) {
+          category = categoryElement.innerText.trim();
+        }
 
         return {
           id: id,
@@ -66,7 +70,11 @@ async function syncProducts() {
       }).filter(p => p.id !== ''); // تصفية أي عناصر غير مكتملة
     });
 
-    console.log(`✅ تم استخراج ${products.length} منتج بنجاح.`);
+    if (products.length === 0) {
+      console.warn("⚠️  لم يتم العثور على أي منتجات. تحقق من الـ selectors أو أن المتجر يحتاج تحديث.");
+    } else {
+      console.log(`✅ تم استخراج ${products.length} منتج بنجاح.`);
+    }
 
     // مسار حفظ ملف products.json في مشروعك
     const filePath = path.join(__dirname, 'products.json');
@@ -76,7 +84,7 @@ async function syncProducts() {
     console.log("💾 تم تحديث ملف products.json بنجاح!");
 
   } catch (error) {
-    console.error("❌ حدث خطأ أثناء جلب البيانات:", error);
+    console.error("❌ حدث خطأ أثناء جلب البيانات:", error.message);
     process.exit(1);
   } finally {
     if (browser) {
