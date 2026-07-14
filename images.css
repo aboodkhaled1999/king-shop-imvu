@@ -1,0 +1,67 @@
+.hero-photo {
+  position: absolute;
+  inset: 2% 6% 4% 6%;
+  overflow: hidden;
+  border-radius: 48% 48% 1.8rem 1.8rem;
+  border: 1px solid rgba(146, 198, 255, .34);
+  background: #101828;
+  box-shadow: 0 0 55px rgba(32, 133, 255, .34);
+}
+
+.hero-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 45%, rgba(3, 7, 14, .86) 100%);
+  pointer-events: none;
+}
+
+.hero-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: saturate(.83) contrast(1.08);
+}
+
+.product-image {
+  background: #060a11 !important;
+}
+
+.product-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(.88) contrast(1.06);
+  transition: transform .55s ease, filter .55s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.06);
+  filter: saturate(1.08) contrast(1.08);
+}
+
+.product-image > span {
+  z-index: 2;
+  text-shadow: 0 1px 12px #000;
+}
+
+.product-orb {
+  z-index: 1;
+  opacity: .28;
+  pointer-events: none;
+}
+
+@media (max-width: 700px) {
+  .hero-photo {
+    inset: 0 0 8% 0;
+    border-radius: 50% 50% 1rem 1rem;
+  }
+
+  .hero-photo img {
+    object-position: center top;
+  }
+}
