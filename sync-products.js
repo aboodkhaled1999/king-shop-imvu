@@ -58,60 +58,78 @@ async function syncProducts() {
       const seen=new Set();
 
 
-      document.querySelectorAll("*").forEach(el=>{
+      const names = [
+        ...document.querySelectorAll("img")
+      ];
 
 
-        const text = el.innerText || "";
-
-
-        const match =
-          text.match(/product_id=(\d+)/);
-
-
-        if(!match) return;
-
-
-        const id=match[1];
-
-
-        if(seen.has(id)) return;
-
-
-        seen.add(id);
-
-
-
-        const parent =
-          el.closest("div");
-
-
-
-        const img =
-          parent?.querySelector("img");
-
+      names.forEach(img=>{
 
 
         let name =
-          parent?.innerText
-          ?.split("\n")
-          ?.filter(x=>x.trim())[0]
-          ||
-          "IMVU Product";
+          img.alt ||
+          img.title ||
+          "";
+
+
+        name=name.trim();
+
+
+        if(!name) return;
+
+
+        const ignore=[
+          "logo",
+          "avatar",
+          "banner"
+        ];
+
+
+        if(
+          ignore.some(x =>
+            name.toLowerCase().includes(x)
+          )
+        ) return;
+
+
+
+        const link =
+          img.closest("a");
+
+
+        if(!link) return;
+
+
+        const url =
+          link.href || "";
+
+
+        if(!url.includes("product")) return;
+
+
+
+        if(seen.has(url)) return;
+
+
+        seen.add(url);
 
 
 
         results.push({
 
-          id,
+          id:
+            url.match(/\d+/)?.[0] ||
+            Date.now().toString(),
 
-          name:name.trim(),
+
+          name,
+
 
           image:
-            img?.src || "",
+            img.src || "",
 
 
-          url:
-            "https://www.imvu.com/shop/product.php?product_id="+id,
+          url,
 
 
           category:"IMVU Item"
@@ -135,28 +153,12 @@ async function syncProducts() {
     );
 
 
-
     const output =
       path.join(__dirname,"products.json");
 
 
 
-    if(products.length){
-
-      fs.writeFileSync(
-        output,
-        JSON.stringify(products,null,2),
-        "utf8"
-      );
-
-
-      console.log(
-        "✅ تم تحديث المنتجات"
-      );
-
-
-    } else {
-
+    if(products.length===0){
 
       throw new Error(
         "لم يتم العثور على منتجات"
@@ -165,13 +167,24 @@ async function syncProducts() {
     }
 
 
+    fs.writeFileSync(
+      output,
+      JSON.stringify(products,null,2),
+      "utf8"
+    );
+
+
+    console.log(
+      "✅ تم حفظ المنتجات بنجاح"
+    );
+
+
 
   } catch(err){
 
     console.error(err.message);
 
     process.exit(1);
-
 
   } finally {
 
