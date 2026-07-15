@@ -1,1 +1,25 @@
-{\n  \"name\": \"king-shop-imvu\",\n  \"version\": \"1.0.0\",\n  \"description\": \"IMVU Shop automated product sync with GitHub Actions\",\n  \"main\": \"sync-products.js\",\n  \"scripts\": {\n    \"sync\": \"node sync-products.js\",\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n  },\n  \"keywords\": [\n    \"imvu\",\n    \"shop\",\n    \"automation\",\n    \"github-actions\"\n  ],\n  \"author\": \"aboodkhaled1999\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"puppeteer\": \"^21.6.0\",\n    \"axios\": \"^1.6.2\"\n  },\n  \"devDependencies\": {},\n  \"engines\": {\n    \"node\": \">=18.0.0\"\n  }\n}\n
+{
+  "name": "king-shop-imvu",
+  "version": "1.0.0",
+  "description": "IMVU Shop automated product sync with GitHub Actions",
+  "main": "sync-products.js",
+  "scripts": {
+    "sync": "node sync-products.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "imvu",
+    "shop",
+    "automation",
+    "github-actions"
+  ],
+  "author": "aboodkhaled1999",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^21.6.0",
+    "axios": "^1.6.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
