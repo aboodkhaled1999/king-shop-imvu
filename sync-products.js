@@ -12,11 +12,12 @@ async function syncProducts() {
 
   try {
     browser = await puppeteer.launch({
-      headless: "new",
+      headless: true,
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage"
+        "--disable-dev-shm-usage",
+        "--disable-gpu"
       ]
     });
 
@@ -32,27 +33,29 @@ async function syncProducts() {
     );
 
     console.log("🌐 فتح متجر IMVU...");
+
     await page.goto(IMVU_SHOP_URL, {
       waitUntil: "networkidle2",
       timeout: 60000
     });
 
-    await page.waitForTimeout(3000);
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
-    // تمرير الصفحة لتحميل الصور والمنتجات
+    // تمرير الصفحة لتحميل جميع المنتجات
     await page.evaluate(async () => {
-      let lastHeight = 0;
+      let totalHeight = 0;
+      const distance = 1000;
 
-      while (lastHeight < document.body.scrollHeight) {
-        lastHeight += 1000;
-        window.scrollTo(0, lastHeight);
-        await new Promise(r => setTimeout(r, 500));
+      while (totalHeight < document.body.scrollHeight) {
+        window.scrollBy(0, distance);
+        totalHeight += distance;
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
 
       window.scrollTo(0, 0);
     });
 
-    await page.waitForTimeout(2000);
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     console.log("📦 استخراج المنتجات...");
 
@@ -105,8 +108,9 @@ async function syncProducts() {
 
         name = name.replace(/\s+/g, " ").trim();
 
-        if (!name)
+        if (!name) {
           name = `IMVU Product ${id}`;
+        }
 
         let price = "";
 
@@ -139,25 +143,27 @@ async function syncProducts() {
 
     products.sort((a, b) => a.name.localeCompare(b.name));
 
-    const file = path.join(__dirname, "products.json");
+    const output = path.join(__dirname, "products.json");
 
     fs.writeFileSync(
-      file,
+      output,
       JSON.stringify(products, null, 2),
       "utf8"
     );
 
-    console.log(`✅ تم حفظ ${products.length} منتج في products.json`);
+    console.log(`✅ تم حفظ ${products.length} منتج`);
 
     if (products.length === 0) {
-      console.warn("⚠️ لم يتم العثور على منتجات. قد تكون IMVU غيّرت تصميم الصفحة.");
+      console.warn("⚠️ لم يتم العثور على أي منتجات.");
     }
 
   } catch (err) {
-    console.error("❌", err);
+    console.error(err);
     process.exit(1);
   } finally {
-    if (browser) await browser.close();
+    if (browser) {
+      await browser.close();
+    }
   }
 }
 
