@@ -1,25 +1,28 @@
 {
   "name": "king-shop-imvu",
-  "version": "1.0.0",
-  "description": "IMVU Shop automated product sync with GitHub Actions",
+  "version": "2.0.0",
+  "description": "Automatic IMVU Shop Sync",
   "main": "sync-products.js",
+  "private": true,
   "scripts": {
     "sync": "node sync-products.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node sync-products.js",
+    "check": "node -e \"console.log('Project OK')\""
   },
   "keywords": [
     "imvu",
     "shop",
     "automation",
+    "scraper",
     "github-actions"
   ],
-  "author": "aboodkhaled1999",
+  "author": "KING SHOP",
   "license": "MIT",
-  "dependencies": {
-    "puppeteer": "^21.6.0",
-    "axios": "^1.6.2"
-  },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "puppeteer": "^24.15.0"
   }
 }
