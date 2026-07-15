@@ -3,8 +3,8 @@ const fs = require('fs');
 const path = require('path');
 
 // https://www.imvu.com/shop/web_search.php?manufacturers_id=315504714
-const IMVU_SHOP_URL = process.env.IMVU_SHOP_URL || "https://www.imvu.com/shop/web_search.php?manufacturers_id=YOUR_CREATOR_ID"; 
-
+const IMVU_SHOP_URL =
+  "https://www.imvu.com/shop/web_search.php?manufacturers_id=315504714";
 async function syncProducts() {
   console.log("🚀 جاري بدء عملية جلب المنتجات من IMVU...");
   let browser;
